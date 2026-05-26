@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#07090c">
+    <title>चतुरंग — Chaturanga & Chaturaji</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   CSS VARIABLES & RESET
+   ========================================================= */
+:root {
+    --bg-dark: #07090c;
+    --bg-light-panel: rgba(18, 25, 22, 0.6);
+    --gold-primary: #e6b800;
+    --gold-glow: rgba(230, 184, 0, 0.25);
+    --gold-gradient: linear-gradient(135deg, #ffe066 0%, #d4af37 50%, #996515 100%);
+    --silver-primary: #cbd5e1;
+    --silver-glow: rgba(203, 213, 225, 0.2);
+    --silver-gradient: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+    --red-primary: #e53935;
+    --red-gradient: linear-gradient(135deg, #ff6b6b 0%, #e53935 100%);
+    --green-primary: #2ecc71;
+    --green-gradient: linear-gradient(135deg, #a3e4d7 0%, #2ecc71 100%);
+    --yellow-primary: #f1c40f;
+    --yellow-gradient: linear-gradient(135deg, #fef9e7 0%, #f1c40f 100%);
+    --black-primary: #34495e;
+    --black-gradient: linear-gradient(135deg, #7f8c8d 0%, #34495e 100%);
+    --ruby-primary: #d32f2f;
+    --sapphire-primary: #1976d2;
+    --emerald-board-dark: #12281f;
+    --emerald-board-light: #efe6d5;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-glass: rgba(212, 175, 55, 0.15);
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --sq: 52px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    touch-action: manipulation;
+}
+body { display: flex; justify-content: center; align-items: flex-start; }
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+.app-background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background: radial-gradient(circle at 10% 20%, rgba(18,40,31,0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(26,35,50,0.4) 0%, transparent 40%),
+                var(--bg-dark);
+}
+
+/* =========================================================
+   GLASS PANEL
+   ========================================================= */
+.glass-panel {
+    background: var(--bg-light-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.5), inset 0 0 12px rgba(212,175,55,0.05);
+}
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+.main-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 12px 12px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 1;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.app-header { text-align: center; padding: 4px 0; }
+.royal-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #ffe066 0%, #f3c623 50%, #a27b18 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    position: relative;
+}
+.royal-title::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 10%; width: 80%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold-primary), transparent);
+}
+.subtitle { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 3px; margin-top: 8px; }
+
+/* =========================================================
+   CONTROL BAR
+   ========================================================= */
+.control-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    flex-wrap: wrap;
+}
+.control-group { display: flex; align-items: center; gap: 8px; }
+.control-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+.control-group select {
+    padding: 6px 10px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    outline: none;
+    max-width: 180px;
+}
+.control-group select:focus { border-color: var(--gold-primary); }
+
+/* =========================================================
+   STATUS ROW (turn indicator)
+   ========================================================= */
+.status-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+}
+.turn-label-sm { font-size: 0.7rem; letter-spacing: 2px; color: var(--text-secondary); }
+.turn-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 30px;
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 1px;
+    transition: var(--transition-smooth);
+}
+.turn-badge.gold-turn   { background: rgba(230,184,0,0.1);   color: var(--gold-primary);   border: 1px solid rgba(230,184,0,0.3); }
+.turn-badge.silver-turn { background: rgba(203,213,225,0.1); color: var(--silver-primary); border: 1px solid rgba(203,213,225,0.3); }
+.turn-badge.green-turn  { background: rgba(46,204,113,0.1);  color: var(--green-primary);  border: 1px solid rgba(46,204,113,0.3); }
+.turn-badge.yellow-turn { background: rgba(241,196,15,0.1);  color: var(--yellow-primary); border: 1px solid rgba(241,196,15,0.3); }
+.turn-badge.black-turn  { background: rgba(52,73,94,0.2);    color: #94a3b8;               border: 1px solid rgba(52,73,94,0.5); }
+.turn-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background-color: currentColor;
+    animation: pulse 1.5s infinite alternate;
+}
+@keyframes pulse {
+    0% { opacity: 0.4; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1.25); }
+}
+
+/* =========================================================
+   PLAYER CARDS ROW
+   ========================================================= */
+.players-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.player-card {
+    flex: 1; min-width: 110px; max-width: 140px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: var(--transition-smooth);
+}
+.player-card.active-glow { border-color: var(--gold-primary); box-shadow: 0 0 8px rgba(212,175,55,0.2); }
+.player-card.inactive { opacity: 0.25; pointer-events: none; }
+.player-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.player-icon {
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+}
+.player-icon.gold   { border: 1px solid var(--gold-primary);   box-shadow: 0 0 8px var(--gold-glow); }
+.player-icon.silver { border: 1px solid var(--silver-primary); box-shadow: 0 0 8px var(--silver-glow); }
+.player-icon.green  { border: 1px solid var(--green-primary);  box-shadow: 0 0 8px rgba(46,204,113,0.2); }
+.player-icon.yellow { border: 1px solid var(--yellow-primary); box-shadow: 0 0 8px rgba(241,196,15,0.2); }
+.player-icon.black  { border: 1px solid #34495e; }
+.player-name { font-size: 0.78rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+.player-role { font-size: 0.65rem; color: var(--text-secondary); }
+.captured-tray {
+    display: flex; flex-wrap: wrap; gap: 2px;
+    min-height: 20px; padding: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px; border: 1px solid rgba(255,255,255,0.02);
+}
+.captured-piece { width: 14px; height: 14px; opacity: 0.7; }
+
+/* =========================================================
+   BOARD AREA
+   ========================================================= */
+.board-container {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    overflow: hidden;
+}
+.board-wrapper { display: flex; align-items: center; }
+.coords-col {
+    display: flex; flex-direction: column; justify-content: space-around;
+    height: calc(var(--sq) * 8);
+    padding: 0 4px;
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    color: var(--gold-primary); opacity: 0.7; font-weight: 600;
+}
+.coords-col span { height: var(--sq); display: flex; align-items: center; justify-content: center; }
+.coords-row {
+    display: flex; justify-content: center;
+    width: calc(var(--sq) * 8);
+    padding: 3px 0;
+    font-family: 'Cinzel', serif; font-size: 0.65rem;
+    color: var(--gold-primary); opacity: 0.7; font-weight: 600;
+}
+.coords-row span { width: var(--sq); text-align: center; }
+
+.board-grid {
+    display: grid;
+    grid-template-columns: repeat(8, var(--sq));
+    grid-template-rows: repeat(8, var(--sq));
+    border: 10px solid #1c150c;
+    border-image: linear-gradient(to bottom right, #2d1f10 0%, #150e06 100%) 10;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.8), 0 0 16px rgba(212,175,55,0.1);
+    border-radius: 4px;
+    position: relative;
+    background: #000;
+}
+
+/* =========================================================
+   SQUARES
+   ========================================================= */
+.square {
+    width: var(--sq); height: var(--sq);
+    display: flex; justify-content: center; align-items: center;
+    position: relative; cursor: pointer;
+    transition: background-color 0.15s;
+    user-select: none;
+}
+.square.light { background-color: var(--emerald-board-light); }
+.square.dark  { background-color: var(--emerald-board-dark); }
+
+.square.marked::before {
+    content: '';
+    position: absolute; top: 10%; left: 10%; width: 80%; height: 80%;
+    border: 1px dashed rgba(212,175,55,0.25); border-radius: 4px;
+    pointer-events: none;
+}
+.square.marked::after {
+    content: '✕';
+    position: absolute; font-size: 0.75rem;
+    color: rgba(212,175,55,0.2); pointer-events: none;
+}
+.square .piece-wrapper {
+    width: 80%; height: 80%; z-index: 2;
+    transition: transform 0.2s cubic-bezier(0.175,0.885,0.32,1.275);
+    display: flex; justify-content: center; align-items: center;
+}
+.square.selected { box-shadow: inset 0 0 15px rgba(253,224,71,0.7); background-color: rgba(253,224,71,0.22) !important; }
+.square.valid-move::after {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; border-radius: 50%;
+    background-color: rgba(230,184,0,0.65);
+    box-shadow: 0 0 8px rgba(230,184,0,0.9);
+    z-index: 3; pointer-events: none;
+    animation: pulseGlow 1.4s infinite alternate;
+}
+.square.valid-move.has-opponent::after { display: none; }
+.square.valid-move.has-opponent {
+    box-shadow: inset 0 0 14px rgba(239,68,68,0.55);
+    background-color: rgba(239,68,68,0.18) !important;
+}
+@keyframes pulseGlow {
+    0% { transform: scale(0.88); opacity: 0.5; }
+    100% { transform: scale(1.12); opacity: 1; }
+}
+.square.in-check { animation: checkRedPulse 0.9s infinite alternate; background-color: rgba(220,38,38,0.3) !important; }
+@keyframes checkRedPulse {
+    0% { box-shadow: inset 0 0 8px rgba(220,38,38,0.4); }
+    100% { box-shadow: inset 0 0 22px rgba(220,38,38,0.85); }
+}
+.square.last-move-source { background-color: rgba(212,175,55,0.08) !important; border: 1px dotted rgba(212,175,55,0.3); }
+.square.last-move-dest   { background-color: rgba(212,175,55,0.13) !important; border: 1px solid rgba(212,175,55,0.4); }
+
+/* =========================================================
+   PIECE SVGs
+   ========================================================= */
+.piece-svg { width: 100%; height: 100%; }
+
+.piece-svg.gold .body, .piece-svg.gold .base, .piece-svg.gold .mane, .piece-svg.gold .howdah { fill: url(#gold-metallic-grad); }
+.piece-svg.gold .accent, .piece-svg.gold .accent-lotus, .piece-svg.gold .accent-shield, .piece-svg.gold .gem { fill: var(--ruby-primary); }
+.piece-svg.gold .gem-center { fill: #fff; } .piece-svg.gold .eye { fill: #3a2010; }
+
+.piece-svg.silver .body, .piece-svg.silver .base, .piece-svg.silver .mane, .piece-svg.silver .howdah { fill: url(#silver-metallic-grad); }
+.piece-svg.silver .accent, .piece-svg.silver .accent-lotus, .piece-svg.silver .accent-shield, .piece-svg.silver .gem { fill: var(--sapphire-primary); }
+.piece-svg.silver .gem-center { fill: #fff; } .piece-svg.silver .eye { fill: #0f172a; }
+
+.piece-svg.green .body, .piece-svg.green .base, .piece-svg.green .mane, .piece-svg.green .howdah { fill: url(#green-metallic-grad); }
+.piece-svg.green .accent, .piece-svg.green .accent-lotus, .piece-svg.green .accent-shield, .piece-svg.green .gem { fill: #27ae60; }
+.piece-svg.green .gem-center { fill: #fff; } .piece-svg.green .eye { fill: #083c1b; }
+
+.piece-svg.yellow .body, .piece-svg.yellow .base, .piece-svg.yellow .mane, .piece-svg.yellow .howdah { fill: url(#yellow-metallic-grad); }
+.piece-svg.yellow .accent, .piece-svg.yellow .accent-lotus, .piece-svg.yellow .accent-shield, .piece-svg.yellow .gem { fill: #e67e22; }
+.piece-svg.yellow .gem-center { fill: #fff; } .piece-svg.yellow .eye { fill: #4a3b04; }
+
+.piece-svg.black .body, .piece-svg.black .base, .piece-svg.black .mane, .piece-svg.black .howdah { fill: url(#black-metallic-grad); }
+.piece-svg.black .accent, .piece-svg.black .accent-lotus, .piece-svg.black .accent-shield, .piece-svg.black .gem { fill: #c0392b; }
+.piece-svg.black .gem-center { fill: #fff; } .piece-svg.black .eye { fill: #000; }
+
+.piece-svg .tusk { stroke: #fff; }
+.piece-svg .ear, .piece-svg .howdah-decor { fill: rgba(0,0,0,0.15); }
+.piece-svg .harness, .piece-svg .staff { stroke: rgba(0,0,0,0.4); }
+.piece-svg .wheel-outer { fill: #5d4037; } .piece-svg .wheel-inner { fill: #3e2723; }
+.piece-svg .wheel-spoke { stroke: #795548; } .piece-svg .accent-line { stroke: #d4af37; }
+
+/* =========================================================
+   MOVE LOG & BUTTONS (collapsible panel)
+   ========================================================= */
+.bottom-panel { padding: 12px 16px; }
+.section-title {
+    font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 2px;
+    color: var(--gold-primary);
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 6px; margin-bottom: 8px;
+}
+.move-history {
+    overflow-y: auto; max-height: 130px; padding-right: 4px;
+    display: flex; flex-direction: column; gap: 4px;
+}
+.move-history::-webkit-scrollbar { width: 3px; }
+.move-history::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+.empty-history { font-size: 0.8rem; color: var(--text-secondary); text-align: center; padding: 14px 0; font-style: italic; }
+.log-row { display: grid; grid-template-columns: 24px 1fr 1fr 1fr 1fr; font-size: 0.72rem; padding: 4px 6px; border-radius: 5px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.02); }
+.log-row.two-player { grid-template-columns: 24px 1fr 1fr; }
+.log-num { color: var(--gold-primary); font-weight: 600; }
+.log-move { display: flex; align-items: center; gap: 3px; }
+.log-move.gold-text   { color: #fbd38d; }
+.log-move.silver-text { color: #e2e8f0; }
+.log-move.green-text  { color: #2ecc71; }
+.log-move.yellow-text { color: #f1c40f; }
+.log-move.black-text  { color: #94a3b8; }
+.log-icon-sm { width: 10px; height: 10px; display: inline-block; vertical-align: middle; }
+
+.action-buttons { display: flex; gap: 10px; margin-top: 12px; }
+.btn {
+    flex: 1; padding: 10px 14px; border-radius: 8px;
+    font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; border: none; transition: var(--transition-smooth);
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-primary { background: var(--gold-gradient); color: #3e2723; box-shadow: 0 4px 15px rgba(230,184,0,0.2); }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(230,184,0,0.4); }
+.btn-secondary { background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary); }
+.btn-secondary:hover { background: rgba(212,175,55,0.1); border-color: var(--gold-primary); }
+
+/* =========================================================
+   MODALS
+   ========================================================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(5,7,10,0.88); z-index: 100;
+    display: none; justify-content: center; align-items: center;
+    padding: 16px; opacity: 0; transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+    width: 100%; max-width: 520px; padding: 24px;
+    position: relative; max-height: 92vh;
+    display: flex; flex-direction: column;
+    transform: scale(0.92);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.modal-overlay.active .modal-content { transform: scale(1); }
+.modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--text-secondary);
+    font-size: 1.6rem; cursor: pointer; transition: var(--transition-smooth);
+}
+.modal-close:hover { color: var(--gold-primary); transform: rotate(90deg); }
+.modal-title {
+    font-family: 'Cinzel', serif; font-size: 1.5rem; letter-spacing: 2px;
+    background: linear-gradient(135deg, #ffe066 0%, #d4af37 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 14px; text-align: center;
+}
+.modal-body {
+    flex: 1; overflow-y: auto; font-size: 0.85rem;
+    line-height: 1.65; color: #cbd5e1; margin-bottom: 16px;
+}
+.modal-body::-webkit-scrollbar { width: 3px; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-glass); border-radius: 4px; }
+.modal-section-title {
+    font-family: 'Cinzel', serif; font-size: 0.95rem;
+    color: var(--gold-primary); margin: 14px 0 6px;
+    border-bottom: 1px solid rgba(212,175,55,0.1); padding-bottom: 3px;
+}
+.pieces-guide { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.piece-guide-item {
+    display: flex; gap: 12px; align-items: center;
+    padding: 8px; background: rgba(255,255,255,0.02);
+    border-radius: 8px; border: 1px solid rgba(255,255,255,0.04);
+}
+.piece-demo-icon {
+    width: 40px; height: 40px; flex-shrink: 0;
+    background: rgba(212,175,55,0.05); border-radius: 6px;
+    border: 1px solid rgba(212,175,55,0.1); padding: 4px;
+}
+.piece-demo-desc h4 { font-size: 0.9rem; color: var(--text-primary); margin-bottom: 1px; }
+.piece-demo-desc p { font-size: 0.78rem; color: var(--text-secondary); }
+
+/* Victory Modal */
+.victory-content {
+    max-width: 380px; text-align: center; align-items: center;
+    border-color: rgba(230,184,0,0.4);
+    box-shadow: 0 0 50px rgba(230,184,0,0.15);
+}
+.victory-decor {
+    font-size: 3rem; margin-bottom: 10px;
+    animation: victoryTrophy 1.5s infinite alternate ease-in-out;
+}
+@keyframes victoryTrophy {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-7px) scale(1.08); filter: drop-shadow(0 0 12px var(--gold-primary)); }
+}
+.victory-subtitle { color: var(--text-secondary); margin-bottom: 16px; font-size: 0.88rem; }
+.victory-stats {
+    background: rgba(0,0,0,0.3); border-radius: 10px;
+    padding: 12px; width: 100%; margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.stat-item { display: flex; justify-content: space-between; font-size: 0.88rem; }
+.stat-label { color: var(--text-secondary); }
+.stat-value { color: var(--gold-primary); font-weight: 700; }
+.modal-footer { width: 100%; }
+</style>
+</head>
+<body>
+<div class="app-background"></div>
+
+<div class="main-container">
+    <!-- Header -->
+    <header class="app-header">
+        <h1 class="royal-title">चतुरंग</h1>
+        <p class="subtitle">CHATURANGA &amp; CHATURAJI &bull; ANCIENT ROYAL CHESS</p>
+    </header>
+
+    <!-- Controls -->
+    <div class="control-bar glass-panel">
+        <div class="control-group">
+            <label>🎮</label>
+            <select id="mode-select">
+                <option value="2P-ai" selected>Single Player (vs AI)</option>
+                <option value="2P-local">2 Players (Local)</option>
+                <option value="4P-ai">4 Players (vs 3 AI)</option>
+                <option value="4P-local">4 Players (Local)</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>🌐</label>
+            <select id="lang-select">
+                <option value="en" selected>English</option>
+                <option value="hi">हिंदी</option>
+                <option value="bn">বাংলা</option>
+                <option value="te">తెలుగు</option>
+                <option value="mr">मराठी</option>
+                <option value="ta">தமிழ்</option>
+                <option value="gu">ગુજરાતી</option>
+                <option value="kn">ಕನ್ನಡ</option>
+                <option value="ml">മലയാളം</option>
+                <option value="pa">ਪੰਜਾਬੀ</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Turn Indicator -->
+    <div class="status-row glass-panel">
+        <span class="turn-label-sm">CURRENT TURN</span>
+        <div class="turn-badge gold-turn" id="turn-badge">
+            <span class="turn-dot"></span>
+            <span id="turn-text">GOLD'S TURN</span>
+        </div>
+    </div>
+
+    <!-- Player Cards -->
+    <div class="players-row" id="players-row">
+        <div class="player-card glass-panel active-glow" id="player-gold-card">
+            <div class="player-header">
+                <span class="player-icon gold">👑</span>
+                <div>
+                    <div class="player-name">Gold</div>
+                    <div class="player-role">Player 1</div>
+                </div>
+            </div>
+            <div class="captured-tray" id="gold-captured"></div>
+        </div>
+        <div class="player-card glass-panel" id="player-opp-card">
+            <div class="player-header">
+                <span class="player-icon silver" id="p-opp-icon">🛡️</span>
+                <div>
+                    <div class="player-name" id="p-opp-name">Silver</div>
+                    <div class="player-role" id="p-opp-role">Opponent (AI)</div>
+                </div>
+            </div>
+            <div class="captured-tray" id="silver-captured"></div>
+        </div>
+        <div class="player-card glass-panel" id="player-green-card" style="display:none">
+            <div class="player-header">
+                <span class="player-icon green">🌿</span>
+                <div>
+                    <div class="player-name">Green</div>
+                    <div class="player-role" id="p-green-role">AI</div>
+                </div>
+            </div>
+            <div class="captured-tray" id="green-captured"></div>
+        </div>
+        <div class="player-card glass-panel" id="player-yellow-card" style="display:none">
+            <div class="player-header">
+                <span class="player-icon yellow">☀️</span>
+                <div>
+                    <div class="player-name">Yellow</div>
+                    <div class="player-role" id="p-yellow-role">AI</div>
+                </div>
+            </div>
+            <div class="captured-tray" id="yellow-captured"></div>
+        </div>
+        <div class="player-card glass-panel" id="player-black-card" style="display:none">
+            <div class="player-header">
+                <span class="player-icon black">🥷</span>
+                <div>
+                    <div class="player-name">Black</div>
+                    <div class="player-role" id="p-black-role">AI</div>
+                </div>
+            </div>
+            <div class="captured-tray" id="black-captured"></div>
+        </div>
+    </div>
+
+    <!-- Board -->
+    <div class="board-container">
+        <div class="coords-row top-coords">
+            <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+        </div>
+        <div class="board-wrapper">
+            <div class="coords-col left-coords">
+                <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+            </div>
+            <div class="board-grid" id="board"></div>
+            <div class="coords-col right-coords">
+                <span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span>
+            </div>
+        </div>
+        <div class="coords-row bottom-coords">
+            <span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span>
+        </div>
+    </div>
+
+    <!-- Log + Buttons -->
+    <div class="bottom-panel glass-panel">
+        <h3 class="section-title" id="log-title">MOVE LOG</h3>
+        <div class="move-history" id="move-history">
+            <div class="empty-history">Game started. Make a move!</div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-secondary" id="btn-rules">📜 Instructions</button>
+            <button class="btn btn-primary" id="btn-restart">🔄 Restart</button>
+        </div>
+    </div>
+</div>
+
+<!-- Instructions Modal -->
+<div class="modal-overlay" id="rules-modal">
+    <div class="modal-content glass-panel">
+        <button class="modal-close" id="rules-close">&times;</button>
+        <h2 class="modal-title" id="modal-title">How to Play</h2>
+        <div class="modal-body scrollable">
+            <p id="modal-intro"></p>
+            <h3 class="modal-section-title" id="modal-modes-title">Game Modes</h3>
+            <p id="modal-modes-desc" style="white-space:pre-line;margin-bottom:12px;"></p>
+            <h3 class="modal-section-title" id="modal-pieces-title">The Royal Pieces</h3>
+            <div class="pieces-guide">
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-raja"></div><div class="piece-demo-desc"><h4 id="guide-raja-name"></h4><p id="guide-raja-desc"></p></div></div>
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-mantri"></div><div class="piece-demo-desc"><h4 id="guide-mantri-name"></h4><p id="guide-mantri-desc"></p></div></div>
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-gaja"></div><div class="piece-demo-desc"><h4 id="guide-gaja-name"></h4><p id="guide-gaja-desc"></p></div></div>
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-ashva"></div><div class="piece-demo-desc"><h4 id="guide-ashva-name"></h4><p id="guide-ashva-desc"></p></div></div>
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-ratha"></div><div class="piece-demo-desc"><h4 id="guide-ratha-name"></h4><p id="guide-ratha-desc"></p></div></div>
+                <div class="piece-guide-item"><div class="piece-demo-icon" id="guide-padati"></div><div class="piece-demo-desc"><h4 id="guide-padati-name"></h4><p id="guide-padati-desc"></p></div></div>
+            </div>
+            <h3 class="modal-section-title" id="modal-win-title">Victory Conditions</h3>
+            <ul style="padding-left:18px;display:flex;flex-direction:column;gap:6px;">
+                <li id="modal-win-cond1"></li>
+                <li id="modal-win-cond2"></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="rules-understand"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay" id="victory-modal">
+    <div class="modal-content glass-panel victory-content">
+        <div class="victory-decor">🏆</div>
+        <h2 class="modal-title" id="victory-title">Victory!</h2>
+        <p class="victory-subtitle" id="victory-message">The Dynasty has triumphed.</p>
+        <div class="victory-stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Moves:</span>
+                <span class="stat-value" id="victory-moves">0</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="btn-victory-restart">Begin New Campaign</button>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden SVG Gradients -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="gold-metallic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffe680"/><stop offset="35%" stop-color="#d4af37"/>
+            <stop offset="70%" stop-color="#aa8010"/><stop offset="100%" stop-color="#664d00"/>
+        </linearGradient>
+        <linearGradient id="silver-metallic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/><stop offset="35%" stop-color="#cbd5e1"/>
+            <stop offset="70%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
+        </linearGradient>
+        <linearGradient id="green-metallic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a3e4d7"/><stop offset="35%" stop-color="#2ecc71"/>
+            <stop offset="70%" stop-color="#27ae60"/><stop offset="100%" stop-color="#196f3d"/>
+        </linearGradient>
+        <linearGradient id="yellow-metallic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fef9e7"/><stop offset="35%" stop-color="#f1c40f"/>
+            <stop offset="70%" stop-color="#d4ac0d"/><stop offset="100%" stop-color="#7d6608"/>
+        </linearGradient>
+        <linearGradient id="black-metallic-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7f8c8d"/><stop offset="35%" stop-color="#34495e"/>
+            <stop offset="70%" stop-color="#2c3e50"/><stop offset="100%" stop-color="#1a252f"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<script>
+// =========================================================
+// TRANSLATIONS
+// =========================================================
+const TRANSLATIONS = {
+    en:{title:"How to Play Chaturanga & Chaturaji",intro:"Chaturanga is the 6th-century Indian ancestor of chess, representing traditional warfare. Chaturaji is its famous 4-player variant. Unlike modern chess, there is no castling, pawns only advance 1 step, and pieces have unique movements.",modesTitle:"Game Modes",modesDesc:"1. Chaturanga (2 Players): Gold vs. Silver. Play vs. Friend or Computer.\n2. Chaturaji (4 Players): Red (South) -> Green (West) -> Yellow (North) -> Black (East). Play with friends or as a solo player against 3 Computers.",piecesTitle:"The Royal Pieces",rajaName:"Raja (King)",rajaDesc:"Moves 1 square in any direction. No castling.",mantriName:"Mantri (Minister)",mantriDesc:"Moves exactly 1 square diagonally. Highly defensive.",gajaName:"Gaja (Elephant)",gajaDesc:"Moves exactly 2 squares diagonally. Can jump over intermediate pieces.",ashvaName:"Ashva (Horse)",ashvaDesc:"Moves in an L-shape. Can jump over pieces, identical to the Knight.",rathaName:"Ratha (Chariot)",rathaDesc:"Moves any number of squares horizontally or vertically. Identical to the Rook.",padatiName:"Padati (Foot-soldier)",padatiDesc:"Moves 1 square forward, captures 1 square diagonally forward. No initial 2-square move. Promotes to Mantri on the back rank.",winTitle:"Victory Conditions",winCond1:"Capture the Raja: Capture the enemy King to win (in 2-Player) or eliminate that player (in 4-Player).",winCond2:"Baring the King: Leaving the opponent's Raja entirely alone results in instant victory.",btnUnderstand:"Enter Battlefield"},
+    hi:{title:"चतुरंग और चतुराजी कैसे खेलें",intro:"चतुरंग छठी शताब्दी का भारतीय खेल है जिसे आधुनिक शतरंज का पूर्वज माना जाता है। चतुराजी इसका 4-खिलाड़ियों वाला संस्करण है।",modesTitle:"गेम मोड्स",modesDesc:"१. चतुरंग (2 खिलाड़ी): गोल्ड बनाम सिल्वर। दोस्त या कंप्यूटर के खिलाफ खेलें।\n२. चतुराजी (4 खिलाड़ी): लाल (दक्षिण) -> हरा (पश्चिम) -> पीला (उत्तर) -> काला (पूर्व)।",piecesTitle:"शाही मोहरे",rajaName:"राजा (King)",rajaDesc:"किसी भी दिशा में केवल 1 घर चलता है। कैसलिंग नहीं।",mantriName:"मंत्री (Minister)",mantriDesc:"केवल 1 घर तिरछा चल सकता है।",gajaName:"गज (Elephant)",gajaDesc:"ठीक 2 घर तिरछा चलता है। बीच के मोहरों के ऊपर से कूद सकता है।",ashvaName:"अश्व (Horse)",ashvaDesc:"L-आकार में चलता है। मोहरों के ऊपर से कूद सकता है।",rathaName:"रथ (Chariot)",rathaDesc:"सीधे या आड़े कितने भी घर चल सकता है।",padatiName:"पदाति (Pawn)",padatiDesc:"1 घर आगे चलता है और तिरछा कैप्चर करता है। आखिरी पंक्ति में मंत्री बनता है।",winTitle:"जीत की शर्तें",winCond1:"राजा को कैप्चर करना: विरोधी राजा को मारकर जीतें।",winCond2:"राजा को अकेला छोड़ना: यदि विरोधी का केवल राजा बचे तो आप जीत जाते हैं।",btnUnderstand:"रणक्षेत्र में प्रवेश करें"},
+    bn:{title:"চতুরঙ্গ ও চতুরাজি কীভাবে খেলবেন",intro:"চতুরঙ্গ হলো ষষ্ঠ শতাব্দীর ভারতীয় খেলা যা আধুনিক দাবা খেলার আদি রূপ।",modesTitle:"গেম মোড",modesDesc:"১. চতুরঙ্গ (২ জন): গোল্ড বনাম সিলভার।\n২. চতুরাজি (৪ জন): লাল -> সবুজ -> হলুদ -> কালো।",piecesTitle:"রাজকীয় ঘুঁটি",rajaName:"রাজা",rajaDesc:"যেকোনো দিকে ১ ঘর।",mantriName:"মন্ত্রী",mantriDesc:"কোনাকুনি ১ ঘর।",gajaName:"গজ",gajaDesc:"কোনাকুনি ২ ঘর, লাফ দিতে পারে।",ashvaName:"অশ্ব",ashvaDesc:"L-আকারে চলে।",rathaName:"রথ",rathaDesc:"সরলরেখায় যেকোনো দূরত্ব।",padatiName:"পদাতিক",padatiDesc:"১ ঘর সামনে, কোনাকুনি মারে। শেষে মন্ত্রী হয়।",winTitle:"জয়ের শর্ত",winCond1:"রাজাকে বন্দী করুন।",winCond2:"রাজাকে একা করুন।",btnUnderstand:"রণক্ষেত্রে প্রবেশ করুন"},
+    te:{title:"చతురంగ & చతురాజి ఎలా ఆడాలి",intro:"చతురంగ 6వ శతాబ్దపు భారతీయ ఆట, ఆధునిక చెస్ యొక్క ప్రాచీన రూపం.",modesTitle:"గేమ్ మోడ్‌లు",modesDesc:"1. చతురంగ: గోల్డ్ vs సిల్వర్.\n2. చతురాజి: 4 ఆటగాళ్లు.",piecesTitle:"రాచరికపు కాయిన్స్",rajaName:"రాజా",rajaDesc:"ఏ దిశలో 1 గడి.",mantriName:"మంత్రి",mantriDesc:"మూలగా 1 గడి.",gajaName:"గజ",gajaDesc:"మూలగా 2 గడులు, దాటగలదు.",ashvaName:"అశ్వ",ashvaDesc:"L-ఆకారంలో.",rathaName:"రథం",rathaDesc:"నిలువు/అడ్డంగా ఎంతైనా.",padatiName:"పదాతి",padatiDesc:"1 గడి ముందు, మూలగా వెట్టు. చివర మంత్రి.",winTitle:"విజయ నియమాలు",winCond1:"రాజాను పట్టుకోండి.",winCond2:"రాజాను ఒంటరిగా వదలండి.",btnUnderstand:"యుద్ధరంగంలోకి"},
+    mr:{title:"चतुरंग आणि चतुराजी कसे खेळावे",intro:"चतुरंग हा ६ व्या शतकातील भारतीय खेळ आहे जो आधुनिक बुद्धिबळाचा पूर्वज मानला जातो.",modesTitle:"गेम मोड्स",modesDesc:"१. चतुरंग: गोल्ड विरुद्ध सिल्वर.\n२. चतुराजी: ४ खेळाडू.",piecesTitle:"शाही मोहरे",rajaName:"राजा",rajaDesc:"कोणत्याही दिशेने १ घर.",mantriName:"मंत्री",mantriDesc:"तिरपे १ घर.",gajaName:"गज",gajaDesc:"तिरपे २ घरे, उडी मारू शकतो.",ashvaName:"अश्व",ashvaDesc:"L-आकारात.",rathaName:"रथ",rathaDesc:"सरळ/आडवे कितीही.",padatiName:"पदाती",padatiDesc:"१ घर पुढे, तिरपे मारतो. शेवटी मंत्री.",winTitle:"विजयाच्या अटी",winCond1:"राजा पकडा.",winCond2:"राजाला एकटे सोडा.",btnUnderstand:"युद्धात उतरा"},
+    ta:{title:"சதுரங்கம் விளையாடுவது எப்படி",intro:"சதுரங்கம் 6-ஆம் நூற்றாண்டின் இந்திய விளையாட்டு, நவீன சதுரங்கத்தின் முன்னோடி.",modesTitle:"விளையாட்டு முறைகள்",modesDesc:"1. சதுரங்கம்: தங்கம் vs வெள்ளி.\n2. சதுராஜி: 4 வீரர்கள்.",piecesTitle:"அரச காய்கள்",rajaName:"ராஜா",rajaDesc:"எந்த திசையிலும் 1 கட்டம்.",mantriName:"மந்திரி",mantriDesc:"மூலைவிட்டமாக 1 கட்டம்.",gajaName:"கஜம்",gajaDesc:"மூலைவிட்டமாக 2 கட்டங்கள்.",ashvaName:"அஸ்வம்",ashvaDesc:"L-வடிவத்தில்.",rathaName:"ரதம்",rathaDesc:"நேராக எத்தனை கட்டமும்.",padatiName:"பதாதி",padatiDesc:"1 கட்டம் முன், மூலைவிட்டமாக வெட்டும். இறுதியில் மந்திரி.",winTitle:"வெற்றி நிபந்தனைகள்",winCond1:"ராஜாவைக் கைப்பற்றுங்கள்.",winCond2:"ராஜாவை தனிமைப்படுத்துங்கள்.",btnUnderstand:"களத்தில் இறங்குங்கள்"},
+    gu:{title:"ચતુરંગ કેવી રીતે રમવું",intro:"ચતુરંગ ૬ઠ્ઠી સદીની ભારતીય રમત છે.",modesTitle:"રમતના પ્રકાર",modesDesc:"૧. ચતુરંગ: ગોલ્ડ vs સિલ્વર.\n૨. ચતુરાજી: ૪ ખેલાડી.",piecesTitle:"શાહી મહોરાં",rajaName:"રાજા",rajaDesc:"કોઈ પણ દિશામાં ૧ ઘર.",mantriName:"મંત્રી",mantriDesc:"ત્રાસું ૧ ઘર.",gajaName:"ગજ",gajaDesc:"ત્રાસું ૨ ઘર, કૂદી શકે.",ashvaName:"અશ્વ",ashvaDesc:"L-આકારમાં.",rathaName:"રથ",rathaDesc:"સીધું/આડું ગમે તેટલા ઘર.",padatiName:"પદાર્તિ",padatiDesc:"૧ ઘર આગળ, ત્રાસું કેપ્ચર. અંતે મંત્રી.",winTitle:"જીતની શરતો",winCond1:"રાજા કેપ્ચર કરો.",winCond2:"રાજાને એકલો પાડો.",btnUnderstand:"યુદ્ધ મેદાનમાં"},
+    kn:{title:"ಚತುರಂಗ ಆಡುವುದು ಹೇಗೆ",intro:"ಚತುರಂಗವು 6 ನೇ ಶತಮಾನದ ಭಾರತೀಯ ಆಟ.",modesTitle:"ಆಟದ ವಿಧಾನ",modesDesc:"1. ಚತುರಂಗ: ಗೋಲ್ಡ್ vs ಸಿಲ್ವರ್.\n2. ಚತುರಾಜಿ: 4 ಆಟಗಾರರು.",piecesTitle:"ರಾಜಮನೆತನದ ದಾಳಗಳು",rajaName:"ರಾಜ",rajaDesc:"ಯಾವ ದಿಕ್ಕಿನಲ್ಲೂ 1 ಮನೆ.",mantriName:"ಮಂತ್ರಿ",mantriDesc:"ಕೋನೀಯವಾಗಿ 1 ಮನೆ.",gajaName:"ಗಜ",gajaDesc:"ಕೋನೀಯವಾಗಿ 2 ಮನೆ, ಜಿಗಿಯಬಹುದು.",ashvaName:"ಅಶ್ವ",ashvaDesc:"L-ಆಕಾರ.",rathaName:"ರಥ",rathaDesc:"ನೇರ/ಅಡ್ಡ ಎಷ್ಟು ಮನೆ ಬೇಕಾದರೂ.",padatiName:"ಪದಾತಿ",padatiDesc:"1 ಮನೆ ಮುಂದೆ, ಓರೆಯಾಗಿ. ಕೊನೆಯಲ್ಲಿ ಮಂತ್ರಿ.",winTitle:"ಗೆಲುವಿನ ನಿಯಮ",winCond1:"ರಾಜನನ್ನು ಸೆರೆ ಹಿಡಿಯಿರಿ.",winCond2:"ರಾಜನನ್ನು ಒಂಟಿ ಮಾಡಿ.",btnUnderstand:"ಯುದ್ಧಕ್ಕೆ ಹೋಗಿ"},
+    ml:{title:"ചതുരംഗം ഒംഗ്ങനെ കളിക്കാം",intro:"ആധുനിക ചെസ്സിന്റെ പൂർവ്വരൂപമാണ് ചതുരംഗം.",modesTitle:"ഗെയിം മോഡുകൾ",modesDesc:"1. ചതുരംഗം: ഗോൾഡ് vs സിൽവർ.\n2. ചതുരാജി: 4 കളിക്കാർ.",piecesTitle:"കരുക്കൾ",rajaName:"രാജാവ്",rajaDesc:"ഏത് ദിശയിലേക്കും 1 കളം.",mantriName:"മന്ത്രി",mantriDesc:"ഡയഗണൽ 1 കളം.",gajaName:"ഗജം",gajaDesc:"ഡയഗണൽ 2 കളം, ചാടാം.",ashvaName:"അശ്വം",ashvaDesc:"L-ആകൃതി.",rathaName:"രഥം",rathaDesc:"നേർ/കുറുകെ ഏത് ദൂരവും.",padatiName:"പദാതി",padatiDesc:"1 കളം മുന്നോട്ട്, ഡയഗണൽ. അവസാനം മന്ത്രി.",winTitle:"ജയ നിബന്ധനകൾ",winCond1:"രാജാവിനെ പിടിക്കുക.",winCond2:"രാജാവിനെ ഒറ്റപ്പെടുത്തുക.",btnUnderstand:"യുദ്ധക്കളത്തിലേക്ക്"},
+    pa:{title:"ਚਤੁਰੰਗ ਕਿਵੇਂ ਖੇਡੀਏ",intro:"ਚਤੁਰੰਗ 6ਵੀਂ ਸਦੀ ਦੀ ਭਾਰਤੀ ਖੇਡ ਹੈ।",modesTitle:"ਗੇਮ ਮੋਡ",modesDesc:"1. ਚਤੁਰੰਗ: ਗੋਲਡ vs ਸਿਲਵਰ.\n2. ਚਤੁਰਾਜੀ: 4 ਖਿਡਾਰੀ.",piecesTitle:"ਸ਼ਾਹੀ ਮੋਹਰੇ",rajaName:"ਰਾਜਾ",rajaDesc:"ਕਿਸੇ ਵੀ ਦਿਸ਼ਾ 1 ਘਰ.",mantriName:"ਮੰਤਰੀ",mantriDesc:"ਤਿਰਛਾ 1 ਘਰ.",gajaName:"ਗਜ",gajaDesc:"ਤਿਰਛਾ 2 ਘਰ, ਛਾਲ ਮਾਰ ਸਕਦਾ.",ashvaName:"ਅਸ਼ਵ",ashvaDesc:"L-ਆਕਾਰ.",rathaName:"ਰਥ",rathaDesc:"ਸਿੱਧਾ/ਲੇਟਵਾਂ ਕਿੰਨੇ ਵੀ.",padatiName:"ਪਦਾਤੀ",padatiDesc:"1 ਘਰ ਅੱਗੇ, ਤਿਰਛਾ ਕੱਟਦਾ. ਅੰਤ ਵਿੱਚ ਮੰਤਰੀ.",winTitle:"ਜਿੱਤ ਦੀਆਂ ਸ਼ਰਤਾਂ",winCond1:"ਰਾਜਾ ਫੜੋ.",winCond2:"ਰਾਜੇ ਨੂੰ ਇਕੱਲਾ ਛੱਡੋ.",btnUnderstand:"ਜੰਗ ਵਿੱਚ ਜਾਓ"}
+};
+
+// =========================================================
+// PIECE SVGs
+// =========================================================
+const PIECE_SVGS = {
+    K:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><filter id="sh${c}" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/></filter><g filter="url(#sh${c})"><path d="M20 75 L80 75 L75 60 L25 60 Z" class="base"/><rect x="25" y="65" width="50" height="5" rx="2" class="accent"/><circle cx="35" cy="67.5" r="2.5" class="jewel gem"/><circle cx="50" cy="67.5" r="2.5" class="gem-center"/><circle cx="65" cy="67.5" r="2.5" class="jewel gem"/><path d="M25 60 L30 30 L40 50 L50 20 L60 50 L70 30 L75 60 Z" class="body"/><circle cx="30" cy="28" r="4" class="gem"/><circle cx="50" cy="18" r="5" class="gem-center"/><circle cx="70" cy="28" r="4" class="gem"/><path d="M45 50 C45 42,55 42,55 50 C55 58,45 58,45 50 Z" class="accent-lotus"/></g></svg>`,
+    M:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><g><path d="M25 75 L75 75 L70 65 L30 65 Z" class="base"/><line x1="50" y1="65" x2="50" y2="35" class="staff" stroke-width="5" stroke-linecap="round"/><path d="M30 45 C30 25,70 25,70 45 Z" class="body"/><path d="M30 45 C35 48,45 48,50 45 C55 48,65 48,70 45" fill="none" class="accent-line" stroke-width="3"/><path d="M50 25 L50 18" class="staff" stroke-width="4"/><circle cx="50" cy="15" r="4" class="gem-center"/></g></svg>`,
+    E:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><g><path d="M20,75 C20,65 22,55 30,48 C35,45 45,45 50,48 C55,42 68,42 75,48 C82,53 85,62 85,75 Z" class="body"/><path d="M23,52 C12,48 10,65 14,72 C16,75 19,72 17,68 C15,62 20,58 25,58" class="body" fill="none" stroke-width="12" stroke-linecap="round"/><path d="M20,62 C14,64 12,60 12,58" fill="none" class="tusk" stroke-width="3" stroke-linecap="round"/><circle cx="24" cy="50" r="2.5" class="eye"/><path d="M30,46 C26,48 24,54 28,58 C32,62 34,54 32,48 Z" class="ear"/><path d="M45,46 L65,46 L68,36 L42,36 Z" class="howdah"/><rect x="48" y="40" width="14" height="6" class="howdah-decor"/></g></svg>`,
+    H:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><g><path d="M22 75 L78 75 L70 70 L30 70 Z" class="base"/><path d="M30,70 C30,50 38,35 48,30 C42,35 38,45 36,55" class="mane" stroke-width="4" fill="none"/><path d="M32,70 C35,50 48,32 60,32 C65,32 75,38 72,48 C70,52 64,52 60,50 C55,48 50,55 48,65 C47,68 55,70 55,70" class="body"/><path d="M56,32 L60,20 L64,28 Z" class="body"/><path d="M52,34 L54,24 L58,30 Z" class="mane" fill="none"/><circle cx="62" cy="40" r="2" class="eye"/><path d="M68,46 C65,48 60,44 60,40" fill="none" class="harness" stroke-width="2.5"/><path d="M60,40 L48,50" fill="none" class="harness" stroke-width="2"/></g></svg>`,
+    C:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><g><circle cx="50" cy="72" r="12" class="wheel-outer"/><circle cx="50" cy="72" r="8" class="wheel-inner"/><line x1="50" y1="64" x2="50" y2="80" class="wheel-spoke" stroke-width="2"/><line x1="42" y1="72" x2="58" y2="72" class="wheel-spoke" stroke-width="2"/><path d="M22 62 L78 62 L72 35 L28 35 Z" class="body"/><path d="M28 35 L28 25 L38 25 L38 30 L45 30 L45 25 L55 25 L55 30 L62 30 L62 25 L72 25 L72 35 Z" class="body"/><path d="M45 42 L55 42 L53 52 L50 55 L47 52 Z" class="accent-shield"/></g></svg>`,
+    P:(c)=>`<svg viewBox="0 0 100 100" class="piece-svg ${c}"><g><path d="M30 75 L70 75 L65 68 L35 68 Z" class="base"/><path d="M35 68 C35 55,45 45,50 45 C55 45,65 55,65 68 Z" class="body"/><circle cx="50" cy="38" r="10" class="body"/><path d="M50 28 L53 18 L47 18 Z" class="accent"/><circle cx="50" cy="58" r="6" class="accent-shield"/><circle cx="50" cy="58" r="3" class="gem-center"/></g></svg>`
+};
+
+// =========================================================
+// RULES ENGINE
+// =========================================================
+class ChaturangaRules {
+    static isValidCoord(r,c){return r>=0&&r<8&&c>=0&&c<8;}
+    static getValidMoves(r,c,board){
+        const piece=board[r][c]; if(!piece)return[];
+        switch(piece.type){
+            case'P':return this.getPadatiMoves(r,c,piece.color,board);
+            case'C':return this.getRathaMoves(r,c,piece.color,board);
+            case'H':return this.getAshvaMoves(r,c,piece.color,board);
+            case'E':return this.getGajaMoves(r,c,piece.color,board);
+            case'M':return this.getMantriMoves(r,c,piece.color,board);
+            case'K':return this.getRajaMoves(r,c,piece.color,board);
+        }
+        return[];
+    }
+    static getPadatiMoves(r,c,color,board){
+        const moves=[];
+        let dr=0,dc=0,captureDirs=[];
+        if(color==='gold'){dr=-1;dc=0;captureDirs=[[-1,-1],[-1,1]];}
+        else if(color==='silver'||color==='yellow'){dr=1;dc=0;captureDirs=[[1,-1],[1,1]];}
+        else if(color==='green'){dr=0;dc=1;captureDirs=[[-1,1],[1,1]];}
+        else if(color==='black'){dr=0;dc=-1;captureDirs=[[-1,-1],[1,-1]];}
+        const nr=r+dr,nc=c+dc;
+        if(this.isValidCoord(nr,nc)&&!board[nr][nc])moves.push({r:nr,c:nc});
+        captureDirs.forEach(([cdr,cdc])=>{
+            const tr=r+cdr,tc=c+cdc;
+            if(this.isValidCoord(tr,tc)){const t=board[tr][tc];if(t&&t.color!==color)moves.push({r:tr,c:tc});}
+        });
+        return moves;
+    }
+    static getRathaMoves(r,c,color,board){
+        const moves=[];
+        [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr,dc])=>{
+            let cr=r+dr,cc=c+dc;
+            while(this.isValidCoord(cr,cc)){
+                const t=board[cr][cc];
+                if(!t)moves.push({r:cr,c:cc});
+                else{if(t.color!==color)moves.push({r:cr,c:cc});break;}
+                cr+=dr;cc+=dc;
+            }
+        });
+        return moves;
+    }
+    static getAshvaMoves(r,c,color,board){
+        const moves=[];
+        [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>{
+            const tr=r+dr,tc=c+dc;
+            if(this.isValidCoord(tr,tc)){const t=board[tr][tc];if(!t||t.color!==color)moves.push({r:tr,c:tc});}
+        });
+        return moves;
+    }
+    static getGajaMoves(r,c,color,board){
+        const moves=[];
+        [[-2,-2],[-2,2],[2,-2],[2,2]].forEach(([dr,dc])=>{
+            const tr=r+dr,tc=c+dc;
+            if(this.isValidCoord(tr,tc)){const t=board[tr][tc];if(!t||t.color!==color)moves.push({r:tr,c:tc});}
+        });
+        return moves;
+    }
+    static getMantriMoves(r,c,color,board){
+        const moves=[];
+        [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([dr,dc])=>{
+            const tr=r+dr,tc=c+dc;
+            if(this.isValidCoord(tr,tc)){const t=board[tr][tc];if(!t||t.color!==color)moves.push({r:tr,c:tc});}
+        });
+        return moves;
+    }
+    static getRajaMoves(r,c,color,board){
+        const moves=[];
+        [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr,dc])=>{
+            const tr=r+dr,tc=c+dc;
+            if(this.isValidCoord(tr,tc)){const t=board[tr][tc];if(!t||t.color!==color)moves.push({r:tr,c:tc});}
+        });
+        return moves;
+    }
+    static isKingInCheck(color,board){
+        let kr=-1,kc=-1;
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=board[r][c];if(p&&p.type==='K'&&p.color===color){kr=r;kc=c;}}
+        if(kr===-1)return false;
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+            const p=board[r][c];
+            if(p&&p.color!==color){const m=this.getValidMoves(r,c,board);if(m.some(v=>v.r===kr&&v.c===kc))return true;}
+        }
+        return false;
+    }
+    static isBareKing(color,board){
+        let cnt=0,hasK=false;
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=board[r][c];if(p&&p.color===color){cnt++;if(p.type==='K')hasK=true;}}
+        return hasK&&cnt===1;
+    }
+}
+
+// =========================================================
+// AI
+// =========================================================
+class ChaturangaAI {
+    static get PIECE_VALUES(){return{K:1000,C:50,E:35,H:30,M:20,P:10};}
+    static getBestMove(board,color,gameMode='2P'){
+        const moves=this.getAllLegalMoves(board,color);
+        if(!moves.length)return null;
+        let best=[],maxScore=-Infinity;
+        moves.forEach(m=>{
+            const s=this.evaluateMove(board,color,m,gameMode);
+            if(s>maxScore){maxScore=s;best=[m];}else if(s===maxScore)best.push(m);
+        });
+        return best[Math.floor(Math.random()*best.length)];
+    }
+    static getAllLegalMoves(board,color){
+        const moves=[];
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+            const p=board[r][c];
+            if(p&&p.color===color)ChaturangaRules.getValidMoves(r,c,board).forEach(t=>moves.push({src:{r,c},dst:{r:t.r,c:t.c},piece:p}));
+        }
+        return moves;
+    }
+    static evaluateMove(board,color,move,gameMode){
+        let score=0;
+        const{src,dst,piece}=move;
+        const sim=board.map(row=>row.map(cell=>cell?{...cell}:null));
+        const cap=sim[dst.r][dst.c];
+        sim[dst.r][dst.c]=piece;sim[src.r][src.c]=null;
+        if(cap)score+=this.PIECE_VALUES[cap.type]*10;
+        const isProm=piece.type==='P'&&(dst.r===0||dst.r===7||dst.c===0||dst.c===7);
+        if(isProm)score+=(this.PIECE_VALUES['M']-this.PIECE_VALUES['P'])*8;
+        if(ChaturangaRules.isKingInCheck(color,sim))score-=5000;
+        this.getOpponents(color,gameMode).forEach(opp=>{if(ChaturangaRules.isKingInCheck(opp,sim))score+=40;});
+        if(this.isSquareAttacked(dst.r,dst.c,color,sim,gameMode))score-=this.PIECE_VALUES[piece.type]*8;
+        if(piece.type!=='K'&&piece.type!=='P'){
+            const db=Math.abs(src.r-3.5)+Math.abs(src.c-3.5);
+            const da=Math.abs(dst.r-3.5)+Math.abs(dst.c-3.5);
+            score+=(db-da)*0.5;
+        }
+        if(piece.type==='P'){
+            if(color==='gold')score+=(6-dst.r)*0.8;
+            else if(color==='silver')score+=(dst.r-1)*0.8;
+        }
+        return score;
+    }
+    static getOpponents(color,gameMode){
+        if(gameMode==='2P')return[color==='gold'?'silver':'gold'];
+        return['gold','green','yellow','black'].filter(c=>c!==color);
+    }
+    static isSquareAttacked(r,c,defendColor,board,gameMode){
+        const opps=this.getOpponents(defendColor,gameMode);
+        for(let row=0;row<8;row++)for(let col=0;col<8;col++){
+            const p=board[row][col];
+            if(p&&opps.includes(p.color)){const m=ChaturangaRules.getValidMoves(row,col,board);if(m.some(v=>v.r===r&&v.c===c))return true;}
+        }
+        return false;
+    }
+}
+
+// =========================================================
+// AUDIO
+// =========================================================
+class GameAudio {
+    constructor(){this.ctx=null;}
+    init(){if(!this.ctx)this.ctx=new(window.AudioContext||window.webkitAudioContext)();}
+    _play(setup){this.init();if(!this.ctx)return;setup(this.ctx);}
+    playMove(){this._play(ctx=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(220,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(80,ctx.currentTime+0.08);g.gain.setValueAtTime(0.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.08);o.start();o.stop(ctx.currentTime+0.08);});}
+    playCapture(){this._play(ctx=>{const now=ctx.currentTime;[[880,0.2,0.15,'sine'],[180,0.4,0.2,'triangle']].forEach(([f,v,t,type])=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type=type;o.frequency.setValueAtTime(f,now);o.frequency.exponentialRampToValueAtTime(f/3,now+t);g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(0.01,now+t);o.start();o.stop(now+t);});});}
+    playCheck(){this._play(ctx=>{const now=ctx.currentTime;[220,225].forEach(f=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sawtooth';o.frequency.setValueAtTime(f,now);g.gain.setValueAtTime(0.05,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.25);o.start();o.stop(now+0.25);});});}
+    playVictory(){this._play(ctx=>{const now=ctx.currentTime;[261.63,329.63,392,523.25,659.25,783.99,1046.5].forEach((f,i)=>{const t=now+i*0.12,o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='triangle';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.15,t+0.03);g.gain.exponentialRampToValueAtTime(0.001,t+0.4);o.start(t);o.stop(t+0.4);});});}
+}
+const audio=new GameAudio();
+
+// =========================================================
+// GAME STATE
+// =========================================================
+class ChaturangaGame {
+    constructor(mode='2P-ai'){
+        this.board=Array(8).fill(null).map(()=>Array(8).fill(null));
+        this.modeString=mode;
+        this.gameMode=mode.startsWith('4P')?'4P':'2P';
+        this.vsAI=mode.endsWith('ai');
+        this.turn='gold';
+        this.selectedSquare=null;
+        this.validMoves=[];
+        this.captured={gold:[],silver:[],green:[],yellow:[],black:[]};
+        this.moveHistory=[];
+        this.isGameOver=false;
+        this.totalMoves=0;
+        this.lastMove=null;
+        this.eliminated={gold:false,silver:false,green:false,yellow:false,black:false};
+        this.initializeBoard();
+    }
+    initializeBoard(){
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++)this.board[r][c]=null;
+        if(this.gameMode==='2P'){
+            const back=['C','H','E','M','K','E','H','C'];
+            for(let c=0;c<8;c++){this.board[0][c]={type:back[c],color:'silver'};this.board[1][c]={type:'P',color:'silver'};}
+            for(let c=0;c<8;c++){this.board[7][c]={type:back[c],color:'gold'};this.board[6][c]={type:'P',color:'gold'};}
+        }else{
+            this.board[7][0]={type:'C',color:'gold'};this.board[7][1]={type:'H',color:'gold'};this.board[7][2]={type:'E',color:'gold'};this.board[7][3]={type:'K',color:'gold'};
+            for(let c=0;c<4;c++)this.board[6][c]={type:'P',color:'gold'};
+            this.board[0][0]={type:'C',color:'green'};this.board[1][0]={type:'H',color:'green'};this.board[2][0]={type:'E',color:'green'};this.board[3][0]={type:'K',color:'green'};
+            for(let r=0;r<4;r++)this.board[r][1]={type:'P',color:'green'};
+            this.board[0][7]={type:'C',color:'yellow'};this.board[0][6]={type:'H',color:'yellow'};this.board[0][5]={type:'E',color:'yellow'};this.board[0][4]={type:'K',color:'yellow'};
+            for(let c=4;c<8;c++)this.board[1][c]={type:'P',color:'yellow'};
+            this.board[7][7]={type:'C',color:'black'};this.board[6][7]={type:'H',color:'black'};this.board[5][7]={type:'E',color:'black'};this.board[4][7]={type:'K',color:'black'};
+            for(let r=4;r<8;r++)this.board[r][6]={type:'P',color:'black'};
+        }
+    }
+    handleSquareClick(r,c){
+        if(this.isGameOver)return;
+        if(this.vsAI&&this.isAITurn(this.turn))return;
+        const piece=this.board[r][c];
+        if(piece&&piece.color===this.turn){this.selectedSquare={r,c};this.validMoves=ChaturangaRules.getValidMoves(r,c,this.board);return;}
+        if(this.selectedSquare){
+            const valid=this.validMoves.some(m=>m.r===r&&m.c===c);
+            if(valid)this.executeMove(this.selectedSquare.r,this.selectedSquare.c,r,c);
+            this.selectedSquare=null;this.validMoves=[];
+        }
+    }
+    executeMove(sr,sc,dr,dc){
+        const piece=this.board[sr][sc];
+        const target=this.board[dr][dc];
+        let isCapture=false;
+        if(target){
+            this.captured[this.turn].push(target);isCapture=true;audio.playCapture();
+            if(target.type==='K'&&this.gameMode==='4P')this.eliminated[target.color]=true;
+        }else audio.playMove();
+        this.board[dr][dc]=piece;this.board[sr][sc]=null;
+        this.lastMove={src:{r:sr,c:sc},dst:{r:dr,c:dc}};
+        const isProm=piece.type==='P'&&this.checkPawnPromotion(piece.color,dr,dc);
+        if(isProm)piece.type='M';
+        this.recordMove(piece.type,sr,sc,dr,dc,isCapture,isProm);
+        if(this.gameMode==='2P'){
+            if(target&&target.type==='K'){this.endGame(this.turn,'The opposing Raja has been captured!');return;}
+            const opp=this.turn==='gold'?'silver':'gold';
+            if(ChaturangaRules.isBareKing(opp,this.board)){this.endGame(this.turn,'The opposing King stands alone. Victory!');return;}
+        }
+        this.advanceTurn();
+    }
+    checkPawnPromotion(color,r,c){
+        if(color==='gold')return r===0;if(color==='silver'||color==='yellow')return r===7;
+        if(color==='green')return c===7;if(color==='black')return c===0;return false;
+    }
+    advanceTurn(){
+        this.totalMoves++;
+        let next=this.turn;
+        if(this.gameMode==='2P'){next=this.turn==='gold'?'silver':'gold';}
+        else{
+            const order=['gold','green','yellow','black'];
+            let idx=order.indexOf(this.turn);
+            for(let i=0;i<4;i++){idx=(idx+1)%4;const c=order[idx];if(!this.eliminated[c]&&this.hasKing(c)){next=c;break;}}
+            const active=order.filter(c=>!this.eliminated[c]&&this.hasKing(c));
+            if(active.length===1){this.endGame(active[0],'All opposing Dynasties have been conquered!');return;}
+        }
+        this.turn=next;
+        if(ChaturangaRules.isKingInCheck(this.turn,this.board))audio.playCheck();
+        if(this.vsAI&&this.isAITurn(this.turn)&&!this.isGameOver){
+            setTimeout(()=>{this.makeAIMove();},600);
+        }
+    }
+    hasKing(color){for(let r=0;r<8;r++)for(let c=0;c<8;c++){const p=this.board[r][c];if(p&&p.type==='K'&&p.color===color)return true;}return false;}
+    isAITurn(color){if(this.gameMode==='2P')return color==='silver';return color!=='gold';}
+    makeAIMove(){
+        const m=ChaturangaAI.getBestMove(this.board,this.turn,this.gameMode);
+        if(m)this.executeMove(m.src.r,m.src.c,m.dst.r,m.dst.c);
+        else this.advanceTurn();
+        if(window.gameUI)window.gameUI.render();
+    }
+    getNotation(r,c){return'abcdefgh'[c]+('87654321'[r]);}
+    getPieceLetter(type){return{K:'R',M:'M',E:'G',H:'A',C:'Rt',P:''}[type]||type;}
+    recordMove(type,sr,sc,dr,dc,isCapture,isProm){
+        const pl=this.getPieceLetter(type),act=isCapture?'x':'',dst=this.getNotation(dr,dc);
+        let str=`${pl}${act}${dst}`;if(isProm)str+=' (M)';
+        if(this.gameMode==='2P'){
+            if(this.turn==='gold')this.moveHistory.push({num:Math.floor(this.totalMoves/2)+1,gold:str,silver:''});
+            else if(this.moveHistory.length>0)this.moveHistory[this.moveHistory.length-1].silver=str;
+        }else{
+            if(this.turn==='gold')this.moveHistory.push({num:Math.floor(this.totalMoves/4)+1,gold:str,green:'',yellow:'',black:''});
+            else if(this.moveHistory.length>0)this.moveHistory[this.moveHistory.length-1][this.turn]=str;
+        }
+    }
+    endGame(winner,message){
+        this.isGameOver=true;audio.playVictory();
+        const titles={gold:'Gold Dynasty Wins!',silver:'Silver Dynasty Wins!',green:'Green Dynasty Wins!',yellow:'Yellow Dynasty Wins!',black:'Black Dynasty Wins!'};
+        document.getElementById('victory-title').innerText=titles[winner]||'Victory!';
+        document.getElementById('victory-message').innerText=message;
+        document.getElementById('victory-moves').innerText=Math.ceil(this.totalMoves/(this.gameMode==='2P'?2:4));
+        setTimeout(()=>document.getElementById('victory-modal').classList.add('active'),800);
+    }
+}
+
+// =========================================================
+// UI
+// =========================================================
+class ChaturangaUI {
+    constructor(game){
+        this.game=game;
+        this.boardEl=document.getElementById('board');
+        this.currentLang='en';
+        this.setupEvents();
+        this.updateLanguage('en');
+        this.render();
+    }
+    setupEvents(){
+        this.boardEl.addEventListener('click',e=>{
+            const sq=e.target.closest('.square');if(!sq)return;
+            this.game.handleSquareClick(parseInt(sq.dataset.row),parseInt(sq.dataset.col));
+            this.render();
+        });
+        document.getElementById('mode-select').addEventListener('change',e=>{
+            this.game=new ChaturangaGame(e.target.value);this.render();
+        });
+        document.getElementById('lang-select').addEventListener('change',e=>this.updateLanguage(e.target.value));
+        const rulesModal=document.getElementById('rules-modal');
+        document.getElementById('btn-rules').addEventListener('click',()=>rulesModal.classList.add('active'));
+        ['rules-close','rules-understand'].forEach(id=>document.getElementById(id).addEventListener('click',()=>rulesModal.classList.remove('active')));
+        const restart=()=>{
+            this.game=new ChaturangaGame(document.getElementById('mode-select').value);
+            document.getElementById('victory-modal').classList.remove('active');
+            this.render();
+        };
+        document.getElementById('btn-restart').addEventListener('click',restart);
+        document.getElementById('btn-victory-restart').addEventListener('click',restart);
+    }
+    updateLanguage(lang){
+        this.currentLang=lang;
+        const s=TRANSLATIONS[lang]||TRANSLATIONS.en;
+        const set=(id,val)=>{const el=document.getElementById(id);if(el)el.innerText=val;};
+        set('modal-title',s.title);set('modal-intro',s.intro);set('modal-modes-title',s.modesTitle);
+        set('modal-modes-desc',s.modesDesc);set('modal-pieces-title',s.piecesTitle);
+        set('guide-raja-name',s.rajaName);set('guide-raja-desc',s.rajaDesc);
+        set('guide-mantri-name',s.mantriName);set('guide-mantri-desc',s.mantriDesc);
+        set('guide-gaja-name',s.gajaName);set('guide-gaja-desc',s.gajaDesc);
+        set('guide-ashva-name',s.ashvaName);set('guide-ashva-desc',s.ashvaDesc);
+        set('guide-ratha-name',s.rathaName);set('guide-ratha-desc',s.rathaDesc);
+        set('guide-padati-name',s.padatiName);set('guide-padati-desc',s.padatiDesc);
+        set('modal-win-title',s.winTitle);set('modal-win-cond1',s.winCond1);set('modal-win-cond2',s.winCond2);
+        set('rules-understand',s.btnUnderstand);
+        document.getElementById('guide-raja').innerHTML=PIECE_SVGS.K('gold');
+        document.getElementById('guide-mantri').innerHTML=PIECE_SVGS.M('gold');
+        document.getElementById('guide-gaja').innerHTML=PIECE_SVGS.E('gold');
+        document.getElementById('guide-ashva').innerHTML=PIECE_SVGS.H('gold');
+        document.getElementById('guide-ratha').innerHTML=PIECE_SVGS.C('gold');
+        document.getElementById('guide-padati').innerHTML=PIECE_SVGS.P('gold');
+    }
+    render(){
+        this.renderBoard();this.renderTrays();this.renderHistory();this.renderStatus();
+    }
+    renderBoard(){
+        this.boardEl.innerHTML='';
+        const inCheck=ChaturangaRules.isKingInCheck(this.game.turn,this.game.board)?this.game.turn:null;
+        const marked=new Set(['0,0','0,7','7,0','7,7','3,3','3,4','4,3','4,4']);
+        for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+            const sq=document.createElement('div');
+            sq.className=`square ${(r+c)%2===0?'light':'dark'}`;
+            sq.dataset.row=r;sq.dataset.col=c;
+            if(marked.has(`${r},${c}`))sq.classList.add('marked');
+            if(this.game.lastMove){
+                if(this.game.lastMove.src.r===r&&this.game.lastMove.src.c===c)sq.classList.add('last-move-source');
+                if(this.game.lastMove.dst.r===r&&this.game.lastMove.dst.c===c)sq.classList.add('last-move-dest');
+            }
+            if(this.game.selectedSquare&&this.game.selectedSquare.r===r&&this.game.selectedSquare.c===c)sq.classList.add('selected');
+            if(this.game.validMoves.some(m=>m.r===r&&m.c===c)){
+                sq.classList.add('valid-move');if(this.game.board[r][c])sq.classList.add('has-opponent');
+            }
+            const piece=this.game.board[r][c];
+            if(piece){
+                if(piece.type==='K'&&piece.color===inCheck)sq.classList.add('in-check');
+                const pw=document.createElement('div');pw.className='piece-wrapper';
+                pw.innerHTML=PIECE_SVGS[piece.type](piece.color);sq.appendChild(pw);
+            }
+            this.boardEl.appendChild(sq);
+        }
+    }
+    renderTrays(){
+        const trays={gold:'gold-captured',silver:'silver-captured',green:'green-captured',yellow:'yellow-captured',black:'black-captured'};
+        Object.entries(trays).forEach(([color,id])=>{
+            const el=document.getElementById(id);if(!el)return;
+            el.innerHTML='';
+            (this.game.captured[color]||[]).forEach(p=>{
+                const item=document.createElement('div');item.className='captured-piece';
+                item.innerHTML=PIECE_SVGS[p.type](p.color);el.appendChild(item);
+            });
+        });
+    }
+    renderHistory(){
+        const hEl=document.getElementById('move-history');hEl.innerHTML='';
+        if(!this.game.moveHistory.length){hEl.innerHTML='<div class="empty-history">Game started. Make a move!</div>';return;}
+        this.game.moveHistory.forEach(move=>{
+            const row=document.createElement('div');
+            if(this.game.gameMode==='2P'){
+                row.className='log-row two-player';
+                row.innerHTML=`<span class="log-num">${move.num}.</span><span class="log-move gold-text">${move.gold}</span><span class="log-move silver-text">${move.silver}</span>`;
+            }else{
+                row.className='log-row';
+                row.innerHTML=`<span class="log-num">${move.num}.</span><span class="log-move gold-text">${move.gold}</span><span class="log-move green-text">${move.green}</span><span class="log-move yellow-text">${move.yellow}</span><span class="log-move black-text">${move.black}</span>`;
+            }
+            hEl.appendChild(row);
+        });
+        hEl.scrollTop=hEl.scrollHeight;
+    }
+    renderStatus(){
+        const badge=document.getElementById('turn-badge');
+        const text=document.getElementById('turn-text');
+        badge.className=`turn-badge ${this.game.turn}-turn`;
+        text.innerText=`${this.game.turn.toUpperCase()}'S TURN`;
+        const cardIds={gold:'player-gold-card',silver:'player-opp-card',green:'player-green-card',yellow:'player-yellow-card',black:'player-black-card'};
+        Object.values(cardIds).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.remove('active-glow','inactive');}});
+        const is4P=this.game.gameMode==='4P';
+        document.getElementById('player-green-card').style.display=is4P?'':'none';
+        document.getElementById('player-yellow-card').style.display=is4P?'':'none';
+        document.getElementById('player-black-card').style.display=is4P?'':'none';
+        if(is4P){
+            document.getElementById('p-opp-name').innerText='Silver';
+            ['green','yellow','black'].forEach(c=>{
+                const card=document.getElementById(`player-${c}-card`);
+                if(card&&(this.game.eliminated[c]||!this.game.hasKing(c)))card.classList.add('inactive');
+            });
+        }else{
+            document.getElementById('p-opp-name').innerText='Silver';
+            document.getElementById('p-opp-role').innerText=this.game.vsAI?'Opponent (AI)':'Player 2';
+        }
+        const activeId=cardIds[this.game.turn]||cardIds['silver'];
+        if(activeId){const el=document.getElementById(activeId);if(el)el.classList.add('active-glow');}
+    }
+}
+
+// =========================================================
+// BOOT
+// =========================================================
+window.addEventListener('DOMContentLoaded',()=>{
+    // Responsive board square sizing
+    function resizeBoard(){
+        const vw=Math.min(window.innerWidth,600);
+        const sq=Math.floor((vw-80)/8);
+        document.documentElement.style.setProperty('--sq',Math.max(38,Math.min(sq,70))+'px');
+    }
+    resizeBoard();window.addEventListener('resize',resizeBoard);
+    const game=new ChaturangaGame('2P-ai');
+    window.gameUI=new ChaturangaUI(game);
+});
+</script>
+</body>
+</html>
